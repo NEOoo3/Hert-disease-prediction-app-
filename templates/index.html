@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Disease Prediction</title>
+    <style>
+        body {
+            background-image: url('/static/images/wp7425305.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            font-family: Arial, sans-serif;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+        }
+        .container {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 30px;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        input {
+            padding: 10px;
+            margin: 10px 0;
+            width: calc(100% - 20px);
+            border: none;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        h2 {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        .history {
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 400px;
+            width: 100%;
+            text-align: left;
+            color: grey;
+            font-size: 14px;
+        }
+        .fade {
+            transition: opacity 1s ease-in-out;
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Heart Disease Prediction</h1>
+        <form action="/predict" method="post">
+            <label for="age">Age:</label><br>
+            <input type="number" id="age" name="age" required><br>
+
+            <label for="cp">Chest Pain Type (0-3):</label><br>
+            <input type="number" id="cp" name="cp" required><br>
+
+            <label for="thalach">Maximum Heart Rate Achieved:</label><br>
+            <input type="number" id="thalach" name="thalach" required><br>
+
+            <button type="submit">Predict</button>
+        </form>
+        {% if prediction_text %}
+            <h2 id="result">{{ prediction_text }}</h2>
+        {% endif %}
+    </div>
+    <div class="history" id="history">
+        <h3>Prediction History</h3>
+        <ul id="history-list">
+            <!-- History will be appended here -->
+        </ul>
+    </div>
+
+    <script>
+        // Fade away result after 20 seconds
+        setTimeout(() => {
+            const resultElement = document.getElementById('result');
+            if (resultElement) {
+                resultElement.classList.add('fade');
+                setTimeout(() => {
+                    resultElement.style.display = 'none';
+                    if (resultElement.innerText.trim() !== "") {
+                        addToHistory(resultElement.innerText);
+                    }
+                }, 1000); // Wait for fade-out animation to complete
+            }
+        }, 20000);
+
+        // Add prediction to history
+        function addToHistory(prediction) {
+            const historyList = document.getElementById('history-list');
+            const listItem = document.createElement('li');
+            listItem.textContent = prediction;
+            historyList.appendChild(listItem);
+        }
+    </script>
+</body>
+</html>
